@@ -1,0 +1,11 @@
+# jwt
+JWT_SECRET: Xz6ZPbje8dOfmpZW6MQwJ3dFuIICnkLdGWH00NBj3jQ
+JWT_EXPIRES_In: 1h
+
+# 数据库配置
+DATABASE_CONFIG:
+  HOST: localhost
+  PORT: 3306
+  USERNAME: root
+  PASSWORD: jiayou11
+  DATABASE: admin_api_db
