@@ -7,6 +7,8 @@ import { AuthModule } from './module/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './utils/config';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './module/auth/jwtAuthGuard';
 @Module({
   imports: [
     // 环境变量
@@ -62,6 +64,13 @@ import configuration from './utils/config';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // 全局注册身份验证管道
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule { }

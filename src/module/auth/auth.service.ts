@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 
@@ -14,11 +19,13 @@ export class AuthService {
     return this.jwtService.signAsync(payload);
   }
   // 验证token
-  async validateToken(token: string): Promise<any> {
+  validateToken(authorizationHeader: string): Promise<any> {
+    const token = authorizationHeader.replace(/^Bearer\s/, '');
     try {
-      return this.jwtService.verify(token);
+      const user = this.jwtService.verify(token);
+      return user;
     } catch (error) {
-      throw new HttpException('身份验证失败', HttpStatus.UNAUTHORIZED);
+      throw new UnauthorizedException('当前登录已过期，请重新登录');
     }
   }
   // 登录
