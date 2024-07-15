@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import * as bcryptjs from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -11,9 +12,19 @@ export class UserService {
     @InjectRepository(User)
     private userTable: Repository<User>,
   ) { }
-  create(createUserDto: CreateUserDto) {
-    console.log(createUserDto);
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    const user = await this.userTable.findOne({
+      where: {
+        username: createUserDto.username,
+      },
+    });
+    if (user) {
+      throw new HttpException('用户名已经存在', HttpStatus.BAD_REQUEST);
+    }
+    const userInfo = { ...createUserDto };
+    userInfo.password = bcryptjs.hashSync(createUserDto.password, 10);
+    await this.userTable.save(userInfo);
+    return '新增成功';
   }
 
   findAll() {

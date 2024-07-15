@@ -16,7 +16,7 @@ export class User {
   @Column({ type: 'varchar', length: 50, nullable: false, comment: '商户名称' })
   username: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: false, comment: '密码' })
+  @Column({ type: 'varchar', length: 100, nullable: false, comment: '密码' })
   password: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true, comment: '手机号码' })

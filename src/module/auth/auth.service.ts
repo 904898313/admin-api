@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import * as bcryptjs from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -32,10 +33,14 @@ export class AuthService {
   async login(body) {
     const user = await this.userService.findOneName(body.username);
     if (!user) {
-      throw new HttpException('用户名不存在', HttpStatus.FORBIDDEN);
+      throw new HttpException('用户名不存在', HttpStatus.BAD_REQUEST);
     }
     if (user.password !== body.password) {
-      throw new HttpException('账号与密码不匹配', HttpStatus.FORBIDDEN);
+    }
+    // 验证密码是否正确
+    const isok = bcryptjs.compareSync(body.password, user.password);
+    if (!isok) {
+      throw new HttpException('账号与密码不匹配', HttpStatus.BAD_REQUEST);
     }
     const payload = {
       username: user.username,
