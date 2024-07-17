@@ -1,7 +1,8 @@
 import {
+  HttpException,
   ExecutionContext,
-  ForbiddenException,
   Injectable,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
@@ -29,7 +30,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     if (isPublic) return true;
     const req = context.switchToHttp().getRequest();
     const accessToken = req.get('Authorization');
-    if (!accessToken) throw new ForbiddenException('请先登录');
+    if (!accessToken)
+      throw new HttpException('请先登录', HttpStatus.UNAUTHORIZED);
     // 验证token是否正确，验证失败时会抛出错误
     this.authService.validateToken(accessToken);
     return super.canActivate(context);

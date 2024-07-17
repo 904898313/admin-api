@@ -7,8 +7,9 @@ import { AuthModule } from './module/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './utils/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from './module/auth/jwtAuthGuard';
+import { SuccessInterceptor } from './common/interceptor';
 @Module({
   imports: [
     // 环境变量
@@ -70,6 +71,11 @@ import { JwtAuthGuard } from './module/auth/jwtAuthGuard';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    // 全局成功响应拦截
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SuccessInterceptor,
     },
   ],
 })

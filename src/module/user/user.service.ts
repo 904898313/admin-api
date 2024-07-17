@@ -19,16 +19,17 @@ export class UserService {
       },
     });
     if (user) {
-      throw new HttpException('用户名已经存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException('用户名已经存在', HttpStatus.OK);
     }
     const userInfo = { ...createUserDto };
     userInfo.password = bcryptjs.hashSync(createUserDto.password, 10);
     await this.userTable.save(userInfo);
-    return '新增成功';
+    return '创建成功';
   }
 
-  findAll() {
-    return this.userTable.find();
+  async findAll() {
+    const users = await this.userTable.find();
+    return users.map((user) => ({ ...user, password: undefined }));
   }
 
   findOneId(id: number) {

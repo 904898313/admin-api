@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcryptjs from 'bcryptjs';
@@ -26,7 +21,10 @@ export class AuthService {
       const user = this.jwtService.verify(token);
       return user;
     } catch (error) {
-      throw new UnauthorizedException('当前登录已过期，请重新登录');
+      throw new HttpException(
+        '当前登录已过期，请重新登录',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
   }
   // 登录
@@ -52,7 +50,6 @@ export class AuthService {
       created_time: user.created_time,
     };
     return {
-      message: '登录成功',
       token: await this.createToken(payload),
     };
   }
