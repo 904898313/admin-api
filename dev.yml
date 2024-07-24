@@ -9,3 +9,10 @@ DATABASE_CONFIG:
   USERNAME: root
   PASSWORD: jiayou11
   DATABASE: admin_api_db
+
+# redis
+REDIS_CONFIG:
+  HOST: localhost
+  PORT: 3306
+  DB: 0
+  # PASSWORD: jiayou11

@@ -32,8 +32,14 @@ export class UserService {
     return users.map((user) => ({ ...user, password: undefined }));
   }
 
-  findOneId(id: number) {
-    return `This action returns a #${id} user`;
+  async findOneId(id: number) {
+    const user = await this.userTable.findOne({
+      where: {
+        id: id,
+      },
+    });
+    user && delete user.password;
+    return user;
   }
 
   findOneName(name: string) {
