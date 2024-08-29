@@ -38,15 +38,15 @@ export class User {
 
   @CreateDateColumn({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
+    // default: () => 'CURRENT_TIMESTAMP',
     comment: '创建时间',
   })
   created_time: Date;
 
   @UpdateDateColumn({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
+    // default: () => 'CURRENT_TIMESTAMP',
+    // onUpdate: 'CURRENT_TIMESTAMP',
     comment: '更新时间',
   })
   updated_time: Date;

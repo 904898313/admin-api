@@ -33,6 +33,7 @@ import { AuthGuard } from './module/auth/auth.guard';
           database:
             configService.get('DATABASE_CONFIG.DATABASE') || 'admin_api_db',
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          synchronize: true,
           // logging: configService.get('datasource.logging'),
           // timezone: '+08:00', // 东八区
           // cache: {

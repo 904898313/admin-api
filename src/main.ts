@@ -5,6 +5,13 @@ import { ErrorFilter } from './common/filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // 配置跨域
+  app.enableCors({
+    origin: '*', // 允许跨域访问的请求地址
+    // methods: ['POST'],
+  });
+
   // 注册全局管道
   app.useGlobalPipes(
     // 入参验证
