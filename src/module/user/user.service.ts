@@ -28,7 +28,13 @@ export class UserService {
   }
 
   async findAll() {
-    const users = await this.userTable.find();
+    const users = await this.userTable.find({
+      relations: {
+        idCard: true,
+        photos: true,
+        questions: true,
+      },
+    });
     return users.map((user) => ({ ...user, password: undefined }));
   }
 
@@ -52,7 +58,12 @@ export class UserService {
 
   update(id: number, updateUserDto: UpdateUserDto) {
     console.log(updateUserDto);
-    return `This action updates a #${id} user`;
+    return this.userTable.update({ id }, updateUserDto);
+    // return this.userTable.findOne({
+    //   where: {
+    //     username: name,
+    //   },
+    // });
   }
 
   remove(id: number) {

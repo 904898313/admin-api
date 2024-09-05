@@ -4,16 +4,28 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  Unique,
+  JoinColumn,
+  OneToOne,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
+import { idCard } from './idCard.entity';
+import { Photo } from './photo.entity';
+import { Question } from './question.entity';
 
 @Entity({ name: 'user' })
-@Unique(['username'])
 export class User {
-  @PrimaryGeneratedColumn({ type: 'int', comment: '主键id' })
+  @PrimaryGeneratedColumn({ type: 'int', comment: '用户id' })
   id: number;
 
-  @Column({ type: 'varchar', length: 50, nullable: false, comment: '商户名称' })
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: false,
+    comment: '用户名称',
+    unique: true,
+  })
   username: string;
 
   @Column({ type: 'varchar', length: 100, nullable: false, comment: '密码' })
@@ -50,4 +62,19 @@ export class User {
     comment: '更新时间',
   })
   updated_time: Date;
+
+  // 1对1
+  @JoinColumn()
+  @OneToOne(() => idCard)
+  idCard: idCard;
+
+  // 1对多
+  @JoinColumn()
+  @OneToMany(() => Photo, (photo) => photo.user)
+  photos: Photo[];
+
+  // 多对多
+  @ManyToMany(() => Question, (question) => question.users)
+  @JoinTable()
+  questions: Question[];
 }

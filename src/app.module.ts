@@ -11,6 +11,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { SuccessInterceptor } from './common/interceptor';
 import { pluginsModule } from './plugins/plugins.module';
 import { AuthGuard } from './module/auth/auth.guard';
+import { MenuModule } from './module/menu/menu.module';
 @Module({
   imports: [
     // 环境变量
@@ -65,6 +66,7 @@ import { AuthGuard } from './module/auth/auth.guard';
     }),
     UserModule,
     AuthModule,
+    MenuModule,
     pluginsModule,
   ],
   controllers: [AppController],
