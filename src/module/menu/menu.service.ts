@@ -18,8 +18,8 @@ export class MenuService {
 
   async findAll() {
     const menuList = await this.menuTable.find();
-    console.log(menuList,"menuList");
-    return generateTree(menuList);
+    const tree = generateTree<(typeof menuList)[0]>(menuList);
+    return tree;
   }
 
   findOne(id: number) {

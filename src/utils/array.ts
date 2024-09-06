@@ -1,26 +1,33 @@
 // 数组方法
 
-export const generateTree = (data) => {
-  // 创建一个以 id 为键的映射
-  const map = new Map();
+// 给原有树结构扩展一个children
+type Extend<T> = T & {
+  children?: Extend<T>[];
+};
+// 树结构泛型 约束
+type Tree = { id: string | number; parentId: string | null };
 
-  // 初始化树节点
-  data.forEach(item => {
-    map.set(item.id, { ...item, children: [] });
-  });
+export const generateTree = <T extends Tree>(data: T[]): Extend<T>[] => {
+  const nodeMap: { [id: string]: T } = {};
 
-  // 构建树结构
-  const tree = [];
-  data.forEach(item => {
-    if (item.parentId === null) {
-      tree.push(map.get(item.id));
+  for (const node of data) {
+    nodeMap[node.id] = node;
+  }
+
+  const tree: Extend<T>[] = [];
+
+  for (const node of data) {
+    const treeNode = nodeMap[node.id];
+
+    if (node.parentId === null) {
+      tree.push(treeNode);
     } else {
-      const parent = map.get(item.parentId);
-      if (parent) {
-        parent.children.push(map.get(item.id));
+      const parentNode: Extend<T> = nodeMap[node.parentId];
+      if (parentNode) {
+        parentNode.children!.push(treeNode);
       }
     }
-  });
+  }
 
   return tree;
 };
