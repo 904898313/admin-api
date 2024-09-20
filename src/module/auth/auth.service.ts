@@ -25,8 +25,8 @@ export class AuthService {
   ) { }
 
   // 生成token
-  createToken(payload) {
-    return this.jwtService.signAsync(payload);
+  createToken(payload, options?) {
+    return this.jwtService.signAsync(payload, options);
   }
   // 验证token
   validateToken(token: string): Playload {
@@ -62,13 +62,40 @@ export class AuthService {
       date: new Date().toString(),
     };
     const token = await this.createToken(payload);
-    this.redisService.set(
-      `${user.id}`,
-      token,
-      this.configService.get('JWT_EXPIRES_In') * 60 * 60,
-    );
+    const refreshToken = await this.createToken(payload, { expiresIn: '7d' });
+    this.redisService.set(`${user.id}`, token, 12 * 60 * 60);
     return {
       token,
+      refreshToken,
     };
+  }
+  // 刷新token
+  async refreshToken(body) {
+    try {
+      const userInfo = this.validateToken(body.refreshToken);
+      const user = await this.userService.findOneName(userInfo.username);
+      if (!user) {
+        throw new HttpException('请先登录', HttpStatus.UNAUTHORIZED);
+      }
+      const payload: Playload = {
+        username: user.username,
+        id: user.id,
+        mobile: user.mobile,
+        status: user.status,
+        address: user.address,
+        description: user.description,
+        created_time: user.created_time,
+        date: new Date().toString(),
+      };
+      const token = await this.createToken(payload);
+      const refreshToken = await this.createToken(payload, { expiresIn: '7d' });
+      this.redisService.set(`${user.id}`, token, 12 * 60 * 60);
+      return {
+        token,
+        refreshToken,
+      };
+    } catch (error) {
+      throw new HttpException('请先登录', HttpStatus.UNAUTHORIZED);
+    }
   }
 }

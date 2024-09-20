@@ -12,4 +12,10 @@ export class AuthController {
   login(@Body() body: loginDto) {
     return this.authService.login(body);
   }
+
+  @Public()
+  @Post('refreshToken')
+  refreshToken(@Body() body) {
+    return this.authService.refreshToken(body);
+  }
 }

@@ -28,12 +28,15 @@ export class AuthGuard implements CanActivate {
     if (isPublic) return true;
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
+    // 没有token 让去登录
     if (!token) {
       throw new HttpException('请先登录', HttpStatus.UNAUTHORIZED);
     }
     // 验证token是否正确，验证失败时会抛出错误
     const payload = this.authService.validateToken(token);
+    // 在redis中获取最新的token
     const redisToken = await this.redisService.get(`${payload.id}`);
+    // 和redis中最新的token对比，不相同，说明用户在其他地方登陆过，刷新了token
     // 同时只能有一个用户存在
     if (token !== redisToken) {
       throw new HttpException(
