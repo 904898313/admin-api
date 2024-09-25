@@ -20,7 +20,8 @@ export class ErrorFilter implements ExceptionFilter {
       status = 500;
       res = '未知错误';
     }
-    response.status(status).json({
+    response.json({
+      data: {},
       statusCode: status,
       message: res,
       timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),

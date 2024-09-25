@@ -16,7 +16,7 @@ export class SuccessInterceptor implements NestInterceptor {
       map((data) => {
         return {
           statusCode: 200,
-          result: instanceToPlain(data),
+          data: instanceToPlain(data),
           message: '请求成功',
         };
       }),
